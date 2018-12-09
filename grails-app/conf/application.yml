@@ -82,16 +82,15 @@ endpoints:
     jmx:
         unique-names: true
 ---
-hibernate:
-    dialect: net.kaleidos.hibernate.PostgresqlExtensionsDialect
-    cache:
-        queries: false
-        use_second_level_cache: false
-        use_query_cache: false
 environments:
     development:
         hibernate:
             default_schema: "wgm"
+        dialect: net.kaleidos.hibernate.PostgresqlExtensionsDialect
+        cache:
+            queries: false
+            use_second_level_cache: false
+            use_query_cache: false
         dataSource:
             pooled: true
             dbCreate: validate
@@ -104,6 +103,11 @@ environments:
     test:
         hibernate:
             default_schema: "public"
+        dialect: net.kaleidos.hibernate.PostgresqlExtensionsDialect
+        cache:
+            queries: false
+            use_second_level_cache: false
+            use_query_cache: false
         dataSource:
             pooled: true
             dbCreate: validate
