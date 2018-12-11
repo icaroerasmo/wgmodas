@@ -86,11 +86,11 @@ environments:
     development:
         hibernate:
             default_schema: "wgm"
-        dialect: net.kaleidos.hibernate.PostgresqlExtensionsDialect
-        cache:
-            queries: false
-            use_second_level_cache: false
-            use_query_cache: false
+            dialect: net.kaleidos.hibernate.PostgresqlExtensionsDialect
+            cache:
+                queries: false
+                use_second_level_cache: false
+                use_query_cache: false
         dataSource:
             pooled: true
             dbCreate: validate
@@ -102,21 +102,20 @@ environments:
             url: jdbc:postgresql://localhost:5432/postgres
     test:
         hibernate:
-            default_schema: "public"
-        dialect: net.kaleidos.hibernate.PostgresqlExtensionsDialect
-        cache:
-            queries: false
-            use_second_level_cache: false
-            use_query_cache: false
+            default_schema: "wgm"
+            cache:
+                queries: false
+                use_second_level_cache: false
+                use_query_cache: false
         dataSource:
             pooled: true
-            dbCreate: validate
+            dbCreate: create-drop
             jmxExport: true
-            driverClassName: org.postgresql.Driver
-            username: postgres
-            password: postgres
+            driverClassName: com.mysql.jdbc.Driver
+            username: root
+            password: 1234
             default_schema: "wgm"
-            url: jdbc:postgresql://localhost:5432/postgres
+            url: jdbc:mysql://localhost:3306/mysql
     production:
         hibernate:
             default_schema: "wgm"
