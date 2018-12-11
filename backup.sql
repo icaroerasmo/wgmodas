@@ -2,9 +2,6 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.14
--- Dumped by pg_dump version 9.5.14
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -12,7 +9,6 @@ SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
-SET row_security = off;
 
 --
 -- Name: DATABASE postgres; Type: COMMENT; Schema: -; Owner: postgres
@@ -25,9 +21,8 @@ COMMENT ON DATABASE postgres IS 'default administrative connection database';
 -- Name: audit; Type: SCHEMA; Schema: -; Owner: postgres
 --
 
-DROP SCHEMA IF EXISTS audit CASCADE;
-
 CREATE SCHEMA audit;
+
 
 ALTER SCHEMA audit OWNER TO postgres;
 
@@ -35,9 +30,8 @@ ALTER SCHEMA audit OWNER TO postgres;
 -- Name: wgm; Type: SCHEMA; Schema: -; Owner: postgres
 --
 
-DROP SCHEMA IF EXISTS wgm CASCADE;
-
 CREATE SCHEMA wgm;
+
 
 ALTER SCHEMA wgm OWNER TO postgres;
 
@@ -169,7 +163,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: logged_actions; Type: TABLE; Schema: audit; Owner: postgres
+-- Name: logged_actions; Type: TABLE; Schema: audit; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE audit.logged_actions (
@@ -189,7 +183,7 @@ WITH (fillfactor='100');
 ALTER TABLE audit.logged_actions OWNER TO postgres;
 
 --
--- Name: cobranca_vendedora; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: cobranca_vendedora; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.cobranca_vendedora (
@@ -225,7 +219,7 @@ ALTER SEQUENCE wgm."COBRANCA_VENDEDORA_ID_seq" OWNED BY wgm.cobranca_vendedora.i
 
 
 --
--- Name: distribuidora; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: distribuidora; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.distribuidora (
@@ -263,7 +257,7 @@ ALTER SEQUENCE wgm."DISTRIBUIDORA_ID_seq" OWNED BY wgm.distribuidora.id;
 
 
 --
--- Name: fabrica; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: fabrica; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.fabrica (
@@ -298,7 +292,7 @@ ALTER SEQUENCE wgm."FABRICA_ID_seq" OWNED BY wgm.fabrica.id;
 
 
 --
--- Name: imagem; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: imagem; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.imagem (
@@ -332,7 +326,7 @@ ALTER SEQUENCE wgm."IMAGEM_ID_seq" OWNED BY wgm.imagem.id;
 
 
 --
--- Name: produto; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: produto; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.produto (
@@ -374,7 +368,7 @@ ALTER SEQUENCE wgm."PRODUTO_ID_seq" OWNED BY wgm.produto.id;
 
 
 --
--- Name: usuario; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: usuario; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.usuario (
@@ -408,7 +402,7 @@ ALTER SEQUENCE wgm."USUARIO_ID_seq" OWNED BY wgm.usuario.id;
 
 
 --
--- Name: vendedora; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: vendedora; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.vendedora (
@@ -446,7 +440,7 @@ ALTER SEQUENCE wgm."VENDEDORA_ID_seq" OWNED BY wgm.vendedora.id;
 
 
 --
--- Name: cliente; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: cliente; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.cliente (
@@ -461,7 +455,7 @@ CREATE TABLE wgm.cliente (
 ALTER TABLE wgm.cliente OWNER TO postgres;
 
 --
--- Name: estoque_distribuidora; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: estoque_distribuidora; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.estoque_distribuidora (
@@ -474,7 +468,7 @@ CREATE TABLE wgm.estoque_distribuidora (
 ALTER TABLE wgm.estoque_distribuidora OWNER TO postgres;
 
 --
--- Name: estoque_vendedora; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: estoque_vendedora; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.estoque_vendedora (
@@ -501,13 +495,12 @@ CREATE SEQUENCE wgm.hibernate_sequence
 ALTER TABLE wgm.hibernate_sequence OWNER TO postgres;
 
 --
--- Name: pedido; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: pedido; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.pedido (
     id bigint NOT NULL,
     vendedora_id bigint NOT NULL,
-    produto_id bigint NOT NULL,
     cliente_id bigint NOT NULL,
     quantidade integer NOT NULL,
     desconto real NOT NULL,
@@ -518,7 +511,7 @@ CREATE TABLE wgm.pedido (
 ALTER TABLE wgm.pedido OWNER TO postgres;
 
 --
--- Name: pedido_produto; Type: TABLE; Schema: wgm; Owner: postgres
+-- Name: pedido_produto; Type: TABLE; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE wgm.pedido_produto (
@@ -541,9 +534,10 @@ CREATE VIEW wgm.view_qtd_pedidos_by_vendedora AS
     vend.cpf AS "CPF_VENDEDORA",
     vend.nome AS "NOME_VENDEDORA",
     count(ped.id) AS "QTD_PRODUTO"
-   FROM ((((wgm.pedido ped
+   FROM (((((wgm.pedido ped
      JOIN wgm.vendedora vend ON ((vend.id = ped.vendedora_id)))
-     JOIN wgm.produto prod ON ((prod.id = ped.produto_id)))
+     JOIN wgm.pedido_produto peprod ON ((peprod.pedido_id = ped.id)))
+     JOIN wgm.produto prod ON ((peprod.produto_id = prod.id)))
      JOIN wgm.cliente cli ON ((cli.id = ped.cliente_id)))
      JOIN wgm.distribuidora dis ON ((dis.id = vend.distribuidora_id)))
   GROUP BY dis.id, dis.cnpj, dis.nome_fantasia, vend.cpf, vend.nome, vend.id
@@ -1610,6 +1604,13 @@ wgm	USUARIO	postgres	2018-10-21 22:18:36.66059-03	I	\N	(1,erasmo.iesb@gmail.com,
 wgm	DISTRIBUIDORA	postgres	2018-10-21 22:19:08.314276-03	I	\N	(1,1,1,1,1)	INSERT INTO wgm."DISTRIBUIDORA" ("ID","FK_USUARIO","CNPJ","RAZAO_SOCIAL","NOME_FANTASIA")\nVALUES ($1,$2,$3,$4,$5)
 wgm	VENDEDORA	postgres	2018-10-21 22:19:38.622073-03	I	\N	(1,1,1,1,06656019560)	INSERT INTO wgm."VENDEDORA" ("ID","FK_USUARIO","FK_DISTRIBUIDORA","NOME","CPF")\nVALUES ($1,$2,$3,$4,$5)
 wgm	fabrica	postgres	2018-12-03 22:29:19.370119-03	I	\N	(1,"Fabrica Normal",Normal,4234234)	insert into wgm.fabrica (telefone, endereco, nome, id) values ($1, $2, $3, $4)
+wgm	usuario	postgres	2018-12-09 18:02:54.253899-03	I	\N	(5,576,5675)	insert into wgm.usuario (senha, email, id) values ($1, $2, $3)
+wgm	distribuidora	postgres	2018-12-09 18:02:54.253899-03	I	\N	(4,5,76,576,57,567,576)	insert into wgm.distribuidora (nome_fantasia, cnpj, usuario_id, telefone, endereco, razao_social, id) values ($1, $2, $3, $4, $5, $6, $7)
+wgm	produto	postgres	2018-12-09 18:03:18.244679-03	I	\N	(6,1,765,76,576,5767,65767,65,765,765,4)	insert into wgm.produto (distribuidora_id, descricao, profundidade, cor, tamanho, largura, altura, preco, fabrica_id, ref, id) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+wgm	usuario	postgres	2018-12-09 18:03:53.447321-03	I	\N	(8,8687,687678)	insert into wgm.usuario (senha, email, id) values ($1, $2, $3)
+wgm	vendedora	postgres	2018-12-09 18:03:53.447321-03	I	\N	(7,8,4,687768768,876,876,876)	insert into wgm.vendedora (distribuidora_id, usuario_id, telefone, endereco, nome, cpf, id) values ($1, $2, $3, $4, $5, $6, $7)
+wgm	pedido	postgres	2018-12-09 18:15:12.645957-03	I	\N	(10,7,3,2,234234,23423424)	insert into wgm.pedido (quantidade, preco_venda, vendedora_id, desconto, cliente_id, id) values ($1, $2, $3, $4, $5, $6)
+wgm	pedido_produto	postgres	2018-12-09 18:15:12.645957-03	I	\N	(6,10)	insert into wgm.pedido_produto (pedido_id, produto_id) values ($1, $2)
 \.
 
 
@@ -1684,6 +1685,7 @@ COPY wgm.cobranca_vendedora (id, parcela, data_vencimento, pedido_id, flag_pagam
 --
 
 COPY wgm.distribuidora (id, usuario_id, cnpj, razao_social, nome_fantasia, telefone, endereco) FROM stdin;
+4	5	76	576	57	567	576
 \.
 
 
@@ -1716,7 +1718,7 @@ COPY wgm.fabrica (id, nome, endereco, telefone) FROM stdin;
 -- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: wgm; Owner: postgres
 --
 
-SELECT pg_catalog.setval('wgm.hibernate_sequence', 3, true);
+SELECT pg_catalog.setval('wgm.hibernate_sequence', 10, true);
 
 
 --
@@ -1731,7 +1733,8 @@ COPY wgm.imagem (id, produto_id, img) FROM stdin;
 -- Data for Name: pedido; Type: TABLE DATA; Schema: wgm; Owner: postgres
 --
 
-COPY wgm.pedido (id, vendedora_id, produto_id, cliente_id, quantidade, desconto, preco_venda) FROM stdin;
+COPY wgm.pedido (id, vendedora_id, cliente_id, quantidade, desconto, preco_venda) FROM stdin;
+10	7	3	2	234234	23423424
 \.
 
 
@@ -1740,6 +1743,7 @@ COPY wgm.pedido (id, vendedora_id, produto_id, cliente_id, quantidade, desconto,
 --
 
 COPY wgm.pedido_produto (produto_id, pedido_id) FROM stdin;
+6	10
 \.
 
 
@@ -1748,6 +1752,7 @@ COPY wgm.pedido_produto (produto_id, pedido_id) FROM stdin;
 --
 
 COPY wgm.produto (id, fabrica_id, ref, descricao, largura, altura, profundidade, cor, preco, tamanho, distribuidora_id) FROM stdin;
+6	1	765	76	576	5767	65767	65	765	765	4
 \.
 
 
@@ -1757,6 +1762,8 @@ COPY wgm.produto (id, fabrica_id, ref, descricao, largura, altura, profundidade,
 
 COPY wgm.usuario (id, email, senha) FROM stdin;
 1	erasmo.iesb@gmail.com	123456
+5	576	5675
+8	8687	687678
 \.
 
 
@@ -1765,11 +1772,12 @@ COPY wgm.usuario (id, email, senha) FROM stdin;
 --
 
 COPY wgm.vendedora (id, usuario_id, distribuidora_id, nome, cpf, endereco, telefone) FROM stdin;
+7	8	4	687768768	876	876	876
 \.
 
 
 --
--- Name: DISTRIBUIDORA_CNPJ_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: DISTRIBUIDORA_CNPJ_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.distribuidora
@@ -1777,7 +1785,7 @@ ALTER TABLE ONLY wgm.distribuidora
 
 
 --
--- Name: DISTRIBUIDORA_NOME_FANTASIA_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: DISTRIBUIDORA_NOME_FANTASIA_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.distribuidora
@@ -1785,7 +1793,7 @@ ALTER TABLE ONLY wgm.distribuidora
 
 
 --
--- Name: DISTRIBUIDORA_RAZAO_SOCIAL_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: DISTRIBUIDORA_RAZAO_SOCIAL_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.distribuidora
@@ -1793,7 +1801,7 @@ ALTER TABLE ONLY wgm.distribuidora
 
 
 --
--- Name: PRODUTO_DESCRICAO_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: PRODUTO_DESCRICAO_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.produto
@@ -1801,7 +1809,7 @@ ALTER TABLE ONLY wgm.produto
 
 
 --
--- Name: PRODUTO_REF_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: PRODUTO_REF_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.produto
@@ -1809,7 +1817,7 @@ ALTER TABLE ONLY wgm.produto
 
 
 --
--- Name: USUARIO_EMAIL_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: USUARIO_EMAIL_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.usuario
@@ -1817,7 +1825,7 @@ ALTER TABLE ONLY wgm.usuario
 
 
 --
--- Name: VENDEDORA_CPF_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: VENDEDORA_CPF_key; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.vendedora
@@ -1825,7 +1833,7 @@ ALTER TABLE ONLY wgm.vendedora
 
 
 --
--- Name: cliente_pkey; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: cliente_pkey; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.cliente
@@ -1833,7 +1841,7 @@ ALTER TABLE ONLY wgm.cliente
 
 
 --
--- Name: cobranca_vendedora_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: cobranca_vendedora_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.cobranca_vendedora
@@ -1841,7 +1849,7 @@ ALTER TABLE ONLY wgm.cobranca_vendedora
 
 
 --
--- Name: distribuidora_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: distribuidora_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.distribuidora
@@ -1849,7 +1857,7 @@ ALTER TABLE ONLY wgm.distribuidora
 
 
 --
--- Name: distribuidora_un; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: distribuidora_un; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.distribuidora
@@ -1857,7 +1865,7 @@ ALTER TABLE ONLY wgm.distribuidora
 
 
 --
--- Name: estoque_distribuidora_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: estoque_distribuidora_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.estoque_distribuidora
@@ -1865,7 +1873,7 @@ ALTER TABLE ONLY wgm.estoque_distribuidora
 
 
 --
--- Name: estoque_vendedora_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: estoque_vendedora_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.estoque_vendedora
@@ -1873,7 +1881,7 @@ ALTER TABLE ONLY wgm.estoque_vendedora
 
 
 --
--- Name: fabrica_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: fabrica_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.fabrica
@@ -1881,7 +1889,7 @@ ALTER TABLE ONLY wgm.fabrica
 
 
 --
--- Name: imagem_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: imagem_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.imagem
@@ -1889,7 +1897,7 @@ ALTER TABLE ONLY wgm.imagem
 
 
 --
--- Name: pedido_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: pedido_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.pedido
@@ -1897,7 +1905,7 @@ ALTER TABLE ONLY wgm.pedido
 
 
 --
--- Name: pedido_produto_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: pedido_produto_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.pedido_produto
@@ -1905,7 +1913,7 @@ ALTER TABLE ONLY wgm.pedido_produto
 
 
 --
--- Name: produto_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: produto_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.produto
@@ -1913,7 +1921,7 @@ ALTER TABLE ONLY wgm.produto
 
 
 --
--- Name: usuario_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: usuario_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.usuario
@@ -1921,7 +1929,7 @@ ALTER TABLE ONLY wgm.usuario
 
 
 --
--- Name: vendedora_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: vendedora_pk; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.vendedora
@@ -1929,7 +1937,7 @@ ALTER TABLE ONLY wgm.vendedora
 
 
 --
--- Name: vendedora_un; Type: CONSTRAINT; Schema: wgm; Owner: postgres
+-- Name: vendedora_un; Type: CONSTRAINT; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY wgm.vendedora
@@ -1937,56 +1945,49 @@ ALTER TABLE ONLY wgm.vendedora
 
 
 --
--- Name: logged_actions_action_idx; Type: INDEX; Schema: audit; Owner: postgres
+-- Name: logged_actions_action_idx; Type: INDEX; Schema: audit; Owner: postgres; Tablespace: 
 --
 
 CREATE INDEX logged_actions_action_idx ON audit.logged_actions USING btree (action);
 
 
 --
--- Name: logged_actions_action_tstamp_idx; Type: INDEX; Schema: audit; Owner: postgres
+-- Name: logged_actions_action_tstamp_idx; Type: INDEX; Schema: audit; Owner: postgres; Tablespace: 
 --
 
 CREATE INDEX logged_actions_action_tstamp_idx ON audit.logged_actions USING btree (action_tstamp);
 
 
 --
--- Name: logged_actions_schema_table_idx; Type: INDEX; Schema: audit; Owner: postgres
+-- Name: logged_actions_schema_table_idx; Type: INDEX; Schema: audit; Owner: postgres; Tablespace: 
 --
 
 CREATE INDEX logged_actions_schema_table_idx ON audit.logged_actions USING btree ((((schema_name || '.'::text) || table_name)));
 
 
 --
--- Name: PEDIDO_CLIENTE; Type: INDEX; Schema: wgm; Owner: postgres
+-- Name: PEDIDO_CLIENTE; Type: INDEX; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE INDEX "PEDIDO_CLIENTE" ON wgm.pedido USING btree (cliente_id);
 
 
 --
--- Name: PEDIDO_DISTRIBUIDORA_PRODUTO_FAB; Type: INDEX; Schema: wgm; Owner: postgres
+-- Name: PEDIDO_DISTRIBUIDORA_PRODUTO_FAB; Type: INDEX; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE INDEX "PEDIDO_DISTRIBUIDORA_PRODUTO_FAB" ON wgm.pedido_produto USING btree (pedido_id);
 
 
 --
--- Name: PEDIDO_DISTRIBUIDORA_PRODUTO_PROD; Type: INDEX; Schema: wgm; Owner: postgres
+-- Name: PEDIDO_DISTRIBUIDORA_PRODUTO_PROD; Type: INDEX; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE INDEX "PEDIDO_DISTRIBUIDORA_PRODUTO_PROD" ON wgm.pedido_produto USING btree (produto_id);
 
 
 --
--- Name: PEDIDO_PRODUTO; Type: INDEX; Schema: wgm; Owner: postgres
---
-
-CREATE INDEX "PEDIDO_PRODUTO" ON wgm.pedido USING btree (produto_id);
-
-
---
--- Name: PEDIDO_VENDEDORA; Type: INDEX; Schema: wgm; Owner: postgres
+-- Name: PEDIDO_VENDEDORA; Type: INDEX; Schema: wgm; Owner: postgres; Tablespace: 
 --
 
 CREATE INDEX "PEDIDO_VENDEDORA" ON wgm.pedido USING btree (vendedora_id);
@@ -2134,14 +2135,6 @@ ALTER TABLE ONLY wgm.pedido
 
 
 --
--- Name: PEDIDO_fk1; Type: FK CONSTRAINT; Schema: wgm; Owner: postgres
---
-
-ALTER TABLE ONLY wgm.pedido
-    ADD CONSTRAINT "PEDIDO_fk1" FOREIGN KEY (produto_id) REFERENCES wgm.produto(id);
-
-
---
 -- Name: PRODUTO_fk0; Type: FK CONSTRAINT; Schema: wgm; Owner: postgres
 --
 
@@ -2196,16 +2189,6 @@ ALTER TABLE ONLY wgm.produto
 REVOKE ALL ON SCHEMA audit FROM PUBLIC;
 REVOKE ALL ON SCHEMA audit FROM postgres;
 GRANT ALL ON SCHEMA audit TO postgres;
-
-
---
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
