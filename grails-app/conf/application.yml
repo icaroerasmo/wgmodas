@@ -109,7 +109,7 @@ environments:
                 use_query_cache: false
         dataSource:
             pooled: true
-            dbCreate: create-drop
+            dbCreate: validate
             jmxExport: true
             driverClassName: com.mysql.jdbc.Driver
             username: root
